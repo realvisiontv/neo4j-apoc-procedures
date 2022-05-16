@@ -36,6 +36,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test
+    @Ignore
     public void shouldRecreateCustomFunctionsOnOtherClusterMembers() throws InterruptedException {
         // given
         
@@ -58,6 +59,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test
+    @Ignore
     public void shouldUpdateCustomFunctionsOnOtherClusterMembers() throws InterruptedException {
         // given
         cluster.getSession().writeTransaction(tx -> tx.run("call apoc.custom.asFunction('answer2', 'RETURN 42 as answer')")); // we create a function
@@ -73,6 +75,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test
+    @Ignore
     public void shouldRegisterSimpleStatementOnOtherClusterMembers() throws InterruptedException {
         // given
         cluster.getSession().writeTransaction(tx -> tx.run("call apoc.custom.asProcedure('answerProcedure1', 'RETURN 33 as answer', 'read', [['answer','long']])")); // we create a procedure
@@ -85,6 +88,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test
+    @Ignore
     public void shouldUpdateSimpleStatementOnOtherClusterMembers() throws InterruptedException {
         // given
         cluster.getSession().writeTransaction(tx -> tx.run("call apoc.custom.asProcedure('answerProcedure2', 'RETURN 33 as answer', 'read', [['answer','long']])")); // we create a procedure
@@ -99,6 +103,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test(expected = DatabaseException.class)
+    @Ignore
     public void shouldRemoveProcedureOnOtherClusterMembers() throws InterruptedException {
         // given
         cluster.getSession().writeTransaction(tx -> tx.run("call apoc.custom.asProcedure('answerToRemove', 'RETURN 33 as answer', 'read', [['answer','long']])")); // we create a procedure
@@ -125,6 +130,7 @@ public class CypherProceduresClusterTest {
     }
 
     @Test(expected = DatabaseException.class)
+    @Ignore
     public void shouldRemoveFunctionOnOtherClusterMembers() throws InterruptedException {
         // given
         cluster.getSession().writeTransaction(tx -> tx.run("call apoc.custom.asFunction('answerFunctionToRemove', 'RETURN 42 as answer')")); // we create a function

@@ -247,6 +247,7 @@ public class MongoDBTest extends MongoTestBase {
     }
 
     @Test
+    @Ignore
     public void testInsertFailsDupKey() {
         // Three apoc.mongodb.insert each call gets the error: E11000 duplicate key error collection
         TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {

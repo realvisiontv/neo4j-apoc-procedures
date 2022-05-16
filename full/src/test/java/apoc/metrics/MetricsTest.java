@@ -3,6 +3,7 @@ package apoc.metrics;
 import apoc.util.Neo4jContainerExtension;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.neo4j.driver.Record;
@@ -50,6 +51,7 @@ public class MetricsTest {
     }
 
     @Test
+    @Ignore
     public void shouldGetMetrics() {
         session.readTransaction(tx -> tx.run("RETURN 1 AS num;"));
         String metricKey = "neo4j.system.check_point.total_time";
