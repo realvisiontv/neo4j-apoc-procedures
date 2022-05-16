@@ -27,25 +27,18 @@ public class S3Container implements AutoCloseable {
 
 
     public S3Container() {
-        TestUtil.ignoreException(() -> {
-            localstack = new LocalStackContainer("0.8.10")
-                    .withServices(S3);
-            localstack.start();
-        }, Exception.class);
-        if (localstack != null) {
-            s3 = AmazonS3ClientBuilder
-                    .standard()
-                    .withEndpointConfiguration(getEndpointConfiguration())
-                    .withCredentials(getCredentialsProvider())
-                    .build();
-            s3.createBucket(getBucket());
-        } else {
-            s3 = null;
-        }
+        localstack = new LocalStackContainer("0.8.10").withServices(S3);
+        localstack.start();
+        s3 = AmazonS3ClientBuilder
+                .standard()
+                .withEndpointConfiguration(getEndpointConfiguration())
+                .withCredentials(getCredentialsProvider())
+                .build();
+        s3.createBucket(getBucket());
     }
 
     public void close() {
-        Util.close(localstack);
+        localstack.close();
         s3.shutdown();
     }
 

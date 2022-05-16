@@ -249,21 +249,15 @@ public class MongoDBTest extends MongoTestBase {
     @Test
     public void testInsertFailsDupKey() {
         // Three apoc.mongodb.insert each call gets the error: E11000 duplicate key error collection
-        TestUtil.ignoreException(() -> {
-            TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
-                assertFalse("should be empty", r.hasNext());
-            });
-        }, QueryExecutionException.class);
-        TestUtil.ignoreException(() -> {
-            TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
-                assertFalse("should be empty", r.hasNext());
-            });
-        }, QueryExecutionException.class);
-        TestUtil.ignoreException(() -> {
-            TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
-                assertFalse("should be empty", r.hasNext());
-            });
-        }, QueryExecutionException.class);
+        TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
+            assertFalse("should be empty", r.hasNext());
+        });
+        TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
+            assertFalse("should be empty", r.hasNext());
+        });
+        TestUtil.testResult(db, "CALL apoc.mongodb.insert($host,$db,'error',[{foo:'bar', _id: 1}, {foo:'bar', _id: 1}])", params, (r) -> {
+            assertFalse("should be empty", r.hasNext());
+        });
     }
 
     @Test

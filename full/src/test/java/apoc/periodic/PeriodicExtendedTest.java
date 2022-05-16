@@ -119,21 +119,18 @@ public class PeriodicExtendedTest {
         });
     }
 
-
     @Test
     public void testIterateJDBC() {
-        TestUtil.ignoreException(() -> {
-            testResult(db, "CALL apoc.periodic.iterate('call apoc.load.jdbc(\"jdbc:mysql://localhost:3306/northwind?user=root\",\"customers\")', 'create (c:Customer) SET c += $row', {batchSize:10,parallel:true})", result -> {
-                Map<String, Object> row = Iterators.single(result);
-                assertEquals(3L, row.get("batches"));
-                assertEquals(29L, row.get("total"));
-            });
+        testResult(db, "CALL apoc.periodic.iterate('call apoc.load.jdbc(\"jdbc:mysql://localhost:3306/northwind?user=root\",\"customers\")', 'create (c:Customer) SET c += $row', {batchSize:10,parallel:true})", result -> {
+            Map<String, Object> row = Iterators.single(result);
+            assertEquals(3L, row.get("batches"));
+            assertEquals(29L, row.get("total"));
+        });
 
-            testCall(db,
-                    "MATCH (p:Customer) return count(p) as count",
-                    row -> assertEquals(29L, row.get("count"))
-            );
-        }, SQLException.class);
+        testCall(db,
+                "MATCH (p:Customer) return count(p) as count",
+                row -> assertEquals(29L, row.get("count"))
+        );
     }
 
     @Test
