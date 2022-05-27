@@ -1,11 +1,13 @@
 package apoc.periodic;
 
+import apoc.create.Create;
+import apoc.dv.DataVirtualizationCatalog;
 import apoc.load.Jdbc;
+import apoc.load.LoadCsv;
+import apoc.util.MySQLContainerExtension;
 import apoc.util.TestUtil;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterAll;
+import apoc.util.Util;
+import org.junit.*;
 
 import org.neo4j.common.DependencyResolver;
 import org.neo4j.graphdb.QueryExecutionException;
@@ -16,7 +18,6 @@ import org.neo4j.kernel.internal.GraphDatabaseAPI;
 import org.neo4j.test.rule.DbmsRule;
 import org.neo4j.test.rule.ImpermanentDbmsRule;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 import static apoc.util.TestUtil.testCall;
@@ -27,16 +28,24 @@ import static org.junit.Assert.fail;
 
 public class PeriodicExtendedTest {
 
-    @Rule
-    public DbmsRule db = new ImpermanentDbmsRule();
+    @ClassRule
+    public static DbmsRule db = new ImpermanentDbmsRule();
 
-    @Before
-    public void initDb() {
-        TestUtil.registerProcedure(db, Periodic.class, PeriodicExtended.class, Jdbc.class);
+    @ClassRule
+    public static MySQLContainerExtension mysql = new MySQLContainerExtension();
+
+    @BeforeClass
+    public static void setUpContainer() {
+        mysql.start();
+        TestUtil.registerProcedure(db,
+                Create.class, DataVirtualizationCatalog.class, Jdbc.class,
+                LoadCsv.class, Periodic.class, PeriodicExtended.class);
+        db.executeTransactionally("CALL apoc.load.driver($driver)", Util.map("driver", mysql.getDriverClassName()));
     }
 
-    @AfterAll
-    public void tearDown() {
+    @AfterClass
+    public static void tearDown() {
+        mysql.stop();
         db.shutdown();
     }
 
@@ -121,15 +130,21 @@ public class PeriodicExtendedTest {
 
     @Test
     public void testIterateJDBC() {
-        testResult(db, "CALL apoc.periodic.iterate('call apoc.load.jdbc(\"jdbc:mysql://localhost:3306/northwind?user=root\",\"customers\")', 'create (c:Customer) SET c += $row', {batchSize:10,parallel:true})", result -> {
-            Map<String, Object> row = Iterators.single(result);
-            assertEquals(3L, row.get("batches"));
-            assertEquals(29L, row.get("total"));
-        });
+        final var url = mysql.getJdbcUrl();
 
-        testCall(db,
-                "MATCH (p:Customer) return count(p) as count",
-                row -> assertEquals(29L, row.get("count"))
+        testCall(db, String.format("""
+            CALL apoc.periodic.iterate(
+                'CALL apoc.load.jdbc("%s", "countrylanguage", []) YIELD row',
+                'CREATE (c: CountryLanguage) SET c += row',
+                {batchSize: 2,parallel: true})
+            """, url),
+            row -> {
+                assertEquals(2L, row.get("batches"));
+                assertEquals(4L, row.get("total"));
+            });
+
+        testCall(db, "MATCH (p: CountryLanguage) RETURN count(p) AS cnt", row ->
+            assertEquals(4L, row.get("cnt"))
         );
     }
 
