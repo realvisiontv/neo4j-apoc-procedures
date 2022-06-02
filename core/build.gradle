@@ -22,7 +22,7 @@ configurations {
 }
 
 shadowJar {
-    archiveClassifier.set('core')
+    archiveClassifier.set('realvision')
 }
 
 javadoc {
@@ -130,11 +130,14 @@ dependencies {
 
     compile group: 'xerces', name: 'xercesImpl', version: '2.12.1'
 
+    compile group: 'com.google.flatbuffers', name: 'flatbuffers-java', version: '2.0.3'
+
     compile group: 'org.apache.arrow', name: 'arrow-vector', version: '7.0.0', {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-annotations'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         exclude group: 'io.netty', module: 'netty-common'
+        exclude group: 'com.google.flatbuffers', module: 'flatbuffers-java'
     }
     compile group: 'org.apache.arrow', name: 'arrow-memory-netty', version: '7.0.0', {
         exclude group: 'com.google.guava', module: 'guava'
