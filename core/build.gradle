@@ -22,7 +22,7 @@ configurations {
 }
 
 shadowJar {
-    archiveClassifier.set('realvision')
+    archiveClassifier.set('realvision-2')
 }
 
 javadoc {
