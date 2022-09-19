@@ -22,7 +22,7 @@ configurations {
 }
 
 shadowJar {
-    archiveClassifier.set('realvision-3')
+    archiveClassifier.set('realvision-4')
 }
 
 javadoc {
@@ -59,7 +59,7 @@ dependencies {
         exclude group: "org.yaml"
         exclude module: "snakeyaml"
     }
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.32'
     testCompile group: 'com.github.stefanbirkner', name: 'system-rules', version: '1.19.0'
 
     testCompile 'net.sourceforge.jexcelapi:jxl:2.6.12'
