@@ -9,6 +9,7 @@ plugins {
 archivesBaseName = "apoc"
 
 apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'project-report'
 
 jar {
     manifest {
@@ -22,7 +23,7 @@ configurations {
 }
 
 shadowJar {
-    archiveClassifier.set('realvision-5')
+    archiveClassifier.set('realvision-6')
 }
 
 javadoc {
@@ -138,11 +139,13 @@ dependencies {
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         exclude group: 'io.netty', module: 'netty-common'
         exclude group: 'com.google.flatbuffers', module: 'flatbuffers-java'
+        exclude group: 'org.slf4j'
     }
     compile group: 'org.apache.arrow', name: 'arrow-memory-netty', version: '7.0.0', {
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'io.netty', module: 'netty-common'
         exclude group: 'io.netty', module: 'netty-buffer'
+        exclude group: 'org.slf4j'
     }
     testCompile group: 'org.apache.arrow', name: 'arrow-vector', version: '7.0.0'
     testCompile group: 'org.apache.arrow', name: 'arrow-memory-netty', version: '7.0.0'
