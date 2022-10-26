@@ -23,7 +23,7 @@ configurations {
 }
 
 shadowJar {
-    archiveClassifier.set('realvision-6')
+    archiveClassifier.set('realvision-7')
 }
 
 javadoc {
@@ -129,7 +129,9 @@ dependencies {
 
     compileOnly group: 'com.google.guava', name: 'guava', version: '31.1-jre'
 
-    compile group: 'xerces', name: 'xercesImpl', version: '2.12.1'
+    compile group: 'xerces', name: 'xercesImpl', version: '2.12.1', {
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
 
     compile group: 'com.google.flatbuffers', name: 'flatbuffers-java', version: '2.0.3'
 
